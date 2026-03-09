@@ -1,3 +1,4 @@
+import { Stepper } from "@/components/Stepper";
 import { Outlet } from "react-router-dom";
 
 // Shared shell for every step route. Router renders this once and swaps
@@ -9,7 +10,7 @@ import { Outlet } from "react-router-dom";
 export function FormLayout() {
   return (
     <div>
-      {/* Stepper/progress bar goes here */}
+      <Stepper />
       <main>
         <Outlet />
       </main>
