@@ -1,48 +1,81 @@
 import { Link, useLocation } from "react-router-dom";
 import { STEPS } from "@/lib/steps";
 import { useFormStore } from "@/store/formStore";
+import { useSidebar } from "@/providers/SidebarContext";
 
-// Bare-bones step indicator for Phase 1: shows all steps, highlights the
-// active one, and lets the user manually click between steps. No visual
-// progress-bar styling yet (Phase 2/5 polish) and no route guard yet
-// (Phase 4) — every step link is clickable regardless of furthestUnlockedStep
-// for now, since there's nothing to validate against until Phase 3 exists.
 export function Stepper() {
   const location = useLocation();
+  const { close } = useSidebar();
   const furthestUnlockedStep = useFormStore(
     (state) => state.furthestUnlockedStep,
+  );
+  const currentIndex = STEPS.findIndex((s) =>
+    location.pathname.endsWith(s.path),
   );
 
   return (
     <nav aria-label="Form steps">
-      {/* "Step X of Y" label, called out explicitly in the spec for
-          screen-reader users who may not benefit from the visual list alone */}
-      <p>
-        Step{STEPS.findIndex((s) => location.pathname.endsWith(s.path)) + 1}of
-        {""} {STEPS.length}
+      <p className="mb-6 text-xs font-medium uppercase tracking-wide text-ink-muted">
+        Step {currentIndex + 1} of {STEPS.length}
       </p>
+
       <ol>
         {STEPS.map((step, index) => {
-          const isActive = location.pathname.endsWith(step.path);
-          // Reachability preview only — not enforced yet. Phase 4's route
-          // guard is what actually blocks navigation; this just dims
-          // steps that aren't reachable so the UI isn't misleading in
-          // the meantime.
-          const isReachable = index <= furthestUnlockedStep;
+          const isActiveStep = location.pathname.endsWith(step.path);
+          const isReachableStep = index <= furthestUnlockedStep;
+          const isLastStep = index === STEPS.length - 1;
 
           return (
-            <li key={step.id}>
+            <li key={step.id} className="relative pb-20 last:pb-0">
+              {!isLastStep && (
+                <span
+                  aria-hidden="true"
+                  className={`absolute left-4 top-8 h-full w-px ${
+                    isReachableStep ? "bg-accent" : "bg-line"
+                  }`}
+                />
+              )}
+
               <Link
                 to={`/form/${step.path}`}
-                // aria-current="step" on the active step, per spec, so
-                // screen readers announce which step is current.
-                aria-current={isActive ? "step" : undefined}
-                aria-disabled={!isReachable}
-                className={
-                  isActive ? "text-blue-800 font-bold" : "text-gray-800"
-                }
+                onClick={close}
+                aria-current={isActiveStep ? "step" : undefined}
+                aria-disabled={!isReachableStep}
+                className={`relative z-10 flex items-center gap-3 rounded-md
+                  focus-visible:outline
+                  focus-visible:outline-offset-2 focus-visible:outline-accent
+                  ${!isReachableStep ? "cursor-not-allowed" : ""}`}
               >
-                {step.label}
+                <span
+                  className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center
+                    rounded-full border text-sm font-medium
+                    ${
+                      isActiveStep
+                        ? "border-accent bg-accent text-accent-text"
+                        : isReachableStep
+                          ? "border-ink bg-surface text-ink"
+                          : "border-line bg-surface text-ink-muted"
+                    }`}
+                >
+                  {index + 1}
+                </span>
+
+                <span className="flex flex-col">
+                  <span
+                    className={
+                      isActiveStep
+                        ? "font-semibold text-ink"
+                        : isReachableStep
+                          ? "text-ink"
+                          : "text-ink-muted"
+                    }
+                  >
+                    {step.label}
+                  </span>
+                  <span className="text-xs text-ink-muted">
+                    {step.description}
+                  </span>
+                </span>
               </Link>
             </li>
           );
