@@ -1,3 +1,82 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-canvas: var(--color-canvas);
+  --color-surface: var(--color-surface);
+  --color-line: var(--color-line);
+
+  --color-ink: var(--color-ink);
+  --color-ink-secondary: var(--color-ink-secondary);
+  --color-ink-muted: var(--color-ink-muted);
+
+  --color-accent: var(--color-accent);
+  --color-accent-text: var(--color-accent-text);
+  --color-accent-hover: var(--color-accent-hover);
+
+  --color-error: var(--color-error);
+  --color-error-surface: var(--color-error-surface);
+  --color-success: var(--color-success);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  --shadow-card: var(--shadow-card);
+}
+
+@theme {
+  --breakpoint-nav: 62rem; /* 992px */
+}
+
+:root {
+  /* Surfaces */
+  --color-canvas: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-line: #e2e2e6;
+
+  /* Text */
+  --color-ink: #18181b;
+  --color-ink-secondary: #52525b;
+  --color-ink-muted: #a1a1aa;
+
+  /* Accent */
+  --color-accent: #18181b;
+  --color-accent-text: #ffffff;
+  --color-accent-hover: #27272a;
+
+  /* Semantic (validation states, needed from Phase 3 onward) */
+  --color-error: #dc2626;
+  --color-error-surface: #fef2f2;
+  --color-success: #16a34a;
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadow */
+  --shadow-card:
+    0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+}
+
+.dark {
+  --color-canvas: #0f0f11;
+  --color-surface: #1c1c1f;
+  --color-line: #2e2e33;
+
+  --color-ink: #f4f4f5;
+  --color-ink-secondary: #a1a1aa;
+  --color-ink-muted: #6b6b70;
+
+  --color-accent: #f4f4f5;
+  --color-accent-text: #18181b;
+  --color-accent-hover: #e4e4e7;
+
+  --color-error: #f87171;
+  --color-error-surface: #2a1516;
+  --color-success: #4ade80;
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+}
