@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+@import "react-phone-number-input/style.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
@@ -79,4 +80,28 @@
   --color-success: #4ade80;
 
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+}
+
+/* react-phone-number-input overrides — the package ships almost no
+   layout constraints of its own, so every dimension below is
+   intentional, not a copy-pasted default. */
+.PhoneInput {
+  width: 100%;
+}
+.PhoneInputInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.PhoneInputInput::placeholder {
+  color: var(--color-ink-muted);
+}
+
+.PhoneInputCountrySelectArrow {
+  color: var(--color-ink);
+  margin-left: 0.5rem; /* tightened from the package's default ~0.35em */
 }

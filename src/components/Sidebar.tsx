@@ -40,7 +40,7 @@ export function Sidebar({ children }: { children: ReactNode }) {
         id="form-sidebar"
         className={`flex flex-col fixed inset-y-0 left-0 z-30 w-72 transform border-r border-line
           bg-surface p-6 transition-transform duration-200 ease-in-out
-          nav:static nav:z-auto nav:w-72 nav:translate-x-0 nav:shrink-0 nav:h-screen
+          nav:static nav:z-auto nav:w-80 nav:translate-x-0 nav:shrink-0 nav:h-screen
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         {children}

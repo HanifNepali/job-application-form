@@ -72,7 +72,7 @@ export function Stepper() {
                   >
                     {step.label}
                   </span>
-                  <span className="text-xs text-ink-muted">
+                  <span className="text-sm text-ink-muted">
                     {step.description}
                   </span>
                 </span>

@@ -29,7 +29,7 @@ export function FormLayout() {
             </div>
           </Sidebar>
 
-          <main className="min-w-0 flex-1 p-6 nav:p-10">
+          <main className="min-w-0 flex-1 p-6 nav:p-16">
             <Outlet />
           </main>
         </div>
