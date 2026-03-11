@@ -12,36 +12,42 @@ export const STEPS = [
     path: "personal-info",
     label: "Personal Info",
     description: "Your name, email, and phone",
+    pageSubHeader: "Please provide your personal details in the form below",
   },
   {
     id: "experience",
     path: "experience",
     label: "Experience",
     description: "Your current and past roles",
+    pageSubHeader: "Please provide your personal details in the form below",
   },
   {
     id: "skills-links",
     path: "skills-links",
     label: "Skills & Links",
     description: "Skills, portfolio, and profiles",
+    pageSubHeader: "Please provide your personal details in the form below",
   },
   {
     id: "uploads",
     path: "uploads",
     label: "Uploads",
     description: "Resume and cover letter",
+    pageSubHeader: "Please provide your personal details in the form below",
   },
   {
     id: "availability",
     path: "availability",
     label: "Availability",
     description: "Location and start date",
+    pageSubHeader: "Please provide your personal details in the form below",
   },
   {
     id: "review",
     path: "review",
     label: "Review & Submit",
     description: "Check everything and submit",
+    pageSubHeader: "Please provide your personal details in the form below",
   },
 ] as const;
 
