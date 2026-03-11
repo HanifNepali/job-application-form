@@ -15,7 +15,7 @@ export const FieldTextInput = forwardRef<HTMLInputElement, FieldTextInputProps>(
       <div>
         <label
           htmlFor={name}
-          className="mb-1.5 block text-sm font-medium text-ink"
+          className="mb-1.5 block text-md font-medium text-ink"
         >
           {label}
         </label>
