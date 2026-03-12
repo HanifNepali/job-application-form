@@ -10,7 +10,7 @@ export interface PastRole {
   title: string;
   startDate: string; // ISO date string (yyyy-mm-dd), matches <input type="date">
   endDate: string; // ignored/blank when isCurrent is true
-  isCurrent: boolean;
+  isCurrentRole: boolean;
 }
 
 export interface PersonalInfo {
