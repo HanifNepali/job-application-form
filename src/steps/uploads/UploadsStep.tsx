@@ -1,10 +1,100 @@
-// Placeholder for Phase 1. Real content (resume/cover letter upload,
-// memory-only file state) lands in Phase 3.
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
+import { uploadsSchema, type UploadsData } from "./schema";
+import { FieldFileInput } from "@/components/FieldFileInput";
+import { Button } from "@/components/Button";
+import { useFileStore } from "@/store/fileStore";
+import { useFormStore } from "@/store/formStore";
+import { STEPS } from "@/lib/steps";
+import { StepHeader } from "@/components/StepHeader";
+
 export function UploadsStep() {
+  const navigate = useNavigate();
+  const resume = useFileStore((s) => s.resume);
+  const coverLetter = useFileStore((s) => s.coverLetter);
+  const setResume = useFileStore((s) => s.setResume);
+  const setCoverLetter = useFileStore((s) => s.setCoverLetter);
+  const setFurthestUnlockedStep = useFormStore(
+    (s) => s.setFurthestUnlockedStep,
+  );
+
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    formState: { errors, isSubmitting },
+  } = useForm<UploadsData>({
+    resolver: zodResolver(uploadsSchema),
+    defaultValues: {
+      resume: resume ?? undefined, // fileStore: null → RHF's expected undefined
+      coverLetter, // already File | null, matches coverLetterSchema's .nullable()
+      // The TypeScript error happens because state variable resume is typed as File | null,
+      // but the React Hook Form default value expects File | undefined
+      // (which is what Zod defaults to when a field is required).
+
+      // No mode/reValidateMode here — onBlur-first timing is a text-typing
+      // concern (don't flag errors mid-keystroke). A file selection is a
+      // single discrete, complete action, so validating it immediately on
+      // selection (via the explicit trigger() calls below) is the correct
+      // behavior here, not premature the way it would be for a text field.
+    },
+  });
+
+  const onSubmit = () => {
+    // resume/coverLetter are already written into fileStore by each
+    // Controller's onChange below, as the user picks them — this form's
+    // own state is just the validation harness, not the source of truth.
+    setFurthestUnlockedStep(4);
+    navigate(`/form/${STEPS[4].path}`);
+  };
+
   return (
-    <div>
-      <h2>Uploads</h2>
-      <p>Step content coming in Phase 3.</p>
-    </div>
+    <>
+      <StepHeader title={STEPS[3].label} description={STEPS[3].pageSubHeader} />
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
+        <Controller
+          name="resume"
+          control={control}
+          render={({ field }) => (
+            <FieldFileInput
+              label="Resume"
+              name="resume"
+              value={field.value}
+              onChange={(file) => {
+                field.onChange(file);
+                setResume(file);
+                trigger("resume");
+              }}
+              error={errors.resume?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="coverLetter"
+          control={control}
+          render={({ field }) => (
+            <FieldFileInput
+              label="Cover Letter (optional)"
+              name="coverLetter"
+              value={field.value}
+              onChange={(file) => {
+                field.onChange(file);
+                setCoverLetter(file);
+                trigger("coverLetter");
+              }}
+              error={errors.coverLetter?.message}
+            />
+          )}
+        />
+
+        <div className="flex justify-end pt-2">
+          <Button type="submit" disabled={isSubmitting}>
+            Next
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }
