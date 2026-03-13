@@ -11,6 +11,7 @@ import { FieldCheckbox } from "@/components/FieldCheckbox";
 import { Button } from "@/components/Button";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
+import { StepHeader } from "@/components/StepHeader";
 
 export function ExperienceStep() {
   const navigate = useNavigate();
@@ -89,94 +90,97 @@ export function ExperienceStep() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 mb-8">
-        <FieldTextInput
-          label="Current Role / Title"
-          error={errors.currentRole?.message}
-          {...register("currentRole")}
-        />
-        <FieldTextInput
-          label="Total Years of Experience"
-          type="number"
-          min={0}
-          error={errors.yearsOfExperience?.message}
-          {...register("yearsOfExperience")}
-        />
-      </div>
+    <>
+      <StepHeader title={STEPS[1].label} description={STEPS[1].pageSubHeader} />
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 mb-8">
+          <FieldTextInput
+            label="Current Role / Title"
+            error={errors.currentRole?.message}
+            {...register("currentRole")}
+          />
+          <FieldTextInput
+            label="Total Years of Experience"
+            type="number"
+            min={0}
+            error={errors.yearsOfExperience?.message}
+            {...register("yearsOfExperience")}
+          />
+        </div>
 
-      <div className="space-y-6">
-        {fields.map((field, index) => {
-          const isCurrent = watchedRoles?.[index]?.isCurrentRole ?? false;
+        <div className="space-y-6">
+          {fields.map((field, index) => {
+            const isCurrent = watchedRoles?.[index]?.isCurrentRole ?? false;
 
-          return (
-            <div
-              key={field.id}
-              className="space-y-4 rounded-lg border border-line p-4"
-            >
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 mb-8">
-                <FieldTextInput
-                  label="Company"
-                  error={errors.pastRoles?.[index]?.company?.message}
-                  {...register(`pastRoles.${index}.company`)}
-                />
-                <FieldTextInput
-                  label="Title"
-                  error={errors.pastRoles?.[index]?.title?.message}
-                  {...register(`pastRoles.${index}.title`)}
-                />
-              </div>
+            return (
+              <div
+                key={field.id}
+                className="space-y-4 rounded-lg border border-line p-4"
+              >
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 mb-8">
+                  <FieldTextInput
+                    label="Company"
+                    error={errors.pastRoles?.[index]?.company?.message}
+                    {...register(`pastRoles.${index}.company`)}
+                  />
+                  <FieldTextInput
+                    label="Title"
+                    error={errors.pastRoles?.[index]?.title?.message}
+                    {...register(`pastRoles.${index}.title`)}
+                  />
+                </div>
 
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 mb-4">
-                <FieldTextInput
-                  label="Start Date"
-                  type="date"
-                  error={errors.pastRoles?.[index]?.startDate?.message}
-                  {...register(`pastRoles.${index}.startDate`)}
-                />
-                {/* Fully unmounted, not disabled, when this role is current —
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 mb-4">
+                  <FieldTextInput
+                    label="Start Date"
+                    type="date"
+                    error={errors.pastRoles?.[index]?.startDate?.message}
+                    {...register(`pastRoles.${index}.startDate`)}
+                  />
+                  {/* Fully unmounted, not disabled, when this role is current —
                     matches the project's existing screen-reader-first stance
                     (aria-live, role="alert") rather than leaving a disabled
                     ghost field a screen reader would still announce. */}
-                {!isCurrent && (
-                  <FieldTextInput
-                    label="End Date"
-                    type="date"
-                    error={errors.pastRoles?.[index]?.endDate?.message}
-                    {...register(`pastRoles.${index}.endDate`)}
-                  />
+                  {!isCurrent && (
+                    <FieldTextInput
+                      label="End Date"
+                      type="date"
+                      error={errors.pastRoles?.[index]?.endDate?.message}
+                      {...register(`pastRoles.${index}.endDate`)}
+                    />
+                  )}
+                </div>
+
+                <FieldCheckbox
+                  label="I currently work here"
+                  name={`pastRoles.${index}.isCurrentRole`}
+                  error={errors.pastRoles?.[index]?.isCurrentRole?.message}
+                  checked={isCurrent}
+                  onChange={(e) =>
+                    handleCurrentRoleChange(index, e.target.checked)
+                  }
+                />
+
+                {fields.length > 1 && (
+                  <Button variant="outline" onClick={() => remove(index)}>
+                    Remove this role
+                  </Button>
                 )}
               </div>
+            );
+          })}
+        </div>
 
-              <FieldCheckbox
-                label="I currently work here"
-                name={`pastRoles.${index}.isCurrentRole`}
-                error={errors.pastRoles?.[index]?.isCurrentRole?.message}
-                checked={isCurrent}
-                onChange={(e) =>
-                  handleCurrentRoleChange(index, e.target.checked)
-                }
-              />
-
-              {fields.length > 1 && (
-                <Button variant="outline" onClick={() => remove(index)}>
-                  Remove this role
-                </Button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <Button variant="outline" onClick={() => append(blankRole())}>
-        Add Role
-      </Button>
-
-      <div className="flex justify-end pt-2">
-        <Button type="submit" disabled={isSubmitting}>
-          Next
+        <Button variant="outline" onClick={() => append(blankRole())}>
+          Add Role
         </Button>
-      </div>
-    </form>
+
+        <div className="flex justify-end pt-2">
+          <Button type="submit" disabled={isSubmitting}>
+            Next
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }
