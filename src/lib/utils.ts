@@ -17,3 +17,6 @@ export const formatFileSize = (bytes: number): string => {
 
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
+
+export const isValueEmpty = (value: unknown) =>
+  value === null || value === undefined || String(value).trim() === "";
