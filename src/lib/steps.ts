@@ -107,7 +107,6 @@ export function validateAllSteps(
   ];
 
   const firstFailure = stepChecks.find(([, isValid]) => !isValid);
-  console.log({ stepChecks, firstFailure });
 
   return {
     isValid: !firstFailure, //if firstFailure is not true then isValid is true
