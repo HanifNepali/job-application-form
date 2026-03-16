@@ -5,6 +5,13 @@
 // path is separate from id even though they're equal today
 // if a URL slug ever needs to diverge from the internal id (unlikely here, but cheap to allow), this is where that seam would live.
 // Order in this array is step order — index into STEPS is what "furthest valid step" will compare
+import { personalInfoSchema } from "@/steps/personal-info/schema";
+import { experienceSchema } from "@/steps/experience/schema";
+import { skillsLinksSchema } from "@/steps/skills-links/schema";
+import { availabilitySchema } from "@/steps/availability/schema";
+import { resumeSchema, coverLetterSchema } from "@/steps/uploads/schema";
+import type { FormData } from "@/types/form";
+import type { FileState, ValidationResult } from "@/types/fields";
 
 export const STEPS = [
   {
@@ -55,3 +62,55 @@ export const STEPS = [
 // Translation
 // type StepId = "personal-info" | "experience" | "skills-links" | "uploads" | "availability" | "review"
 export type StepId = (typeof STEPS)[number]["id"];
+
+/**
+ * Re-runs every step's own schema against current state, independent of
+ * furthestUnlockedStep or any prior per-step validation. This is the
+ * defense-in-depth check described in the requirements doc: per-step gates
+ * can be bypassed (direct URL entry to /form/review, hand-edited
+ * localStorage, stale sessions from before a schema change), so final
+ * submit must trust nothing it hasn't re-checked itself.
+ *
+ * Shared by two callers: Review's final-submit handler (this file's
+ * original purpose), and — once built — Phase 4's route guard, which needs
+ * this exact same "derive first-invalid-step live" logic to decide whether
+ * a direct navigation to /form/:step should be allowed or redirected.
+ * Building it once here avoids two copies of step-schema orchestration
+ * drifting out of sync with each other over time.
+ */
+export function validateAllSteps(
+  data: FormData,
+  files: FileState,
+): ValidationResult {
+  const stepChecks: [string, boolean][] = [
+    [STEPS[0].path, personalInfoSchema.safeParse(data.personalInfo).success],
+    [
+      STEPS[1].path,
+      experienceSchema.safeParse({
+        ...data.experience,
+        // Same store→form seam conversion ExperienceStep's defaultValues
+        // already does — experienceSchema's yearsOfExperience starts as
+        // z.string() (required for the live-typing form's coercion
+        // chain), but the store holds it as a real number. Without this,
+        // a perfectly valid number fails at the schema's first (string)
+        // stage before coercion ever runs.
+        yearsOfExperience: data.experience.yearsOfExperience?.toString() ?? "",
+      }).success,
+    ],
+    [STEPS[2].path, skillsLinksSchema.safeParse(data.skillsLinks).success],
+    [
+      STEPS[3].path,
+      resumeSchema.safeParse(files.resume).success &&
+        coverLetterSchema.safeParse(files.coverLetter).success,
+    ],
+    [STEPS[4].path, availabilitySchema.safeParse(data.availability).success],
+  ];
+
+  const firstFailure = stepChecks.find(([, isValid]) => !isValid);
+  console.log({ stepChecks, firstFailure });
+
+  return {
+    isValid: !firstFailure, //if firstFailure is not true then isValid is true
+    firstInvalidStepPath: firstFailure ? `/form/${firstFailure[0]}` : null,
+  };
+}
