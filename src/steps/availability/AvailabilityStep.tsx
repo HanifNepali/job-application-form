@@ -15,6 +15,7 @@ import { mockJobPosting } from "@/lib/jobPosting";
 import { StepHeader } from "@/components/StepHeader";
 import { FieldYesNo } from "@/components/FieldYesNo";
 import { RELOCATION_REGIONS } from "@/lib/constants";
+import { useEffect } from "react";
 
 export function AvailabilityStep() {
   const navigate = useNavigate();
@@ -23,12 +24,14 @@ export function AvailabilityStep() {
   const setFurthestUnlockedStep = useFormStore(
     (s) => s.setFurthestUnlockedStep,
   );
+  const validateOnMount = useFormStore((s) => s.validateOnMount);
 
   const {
     register,
     control,
     handleSubmit,
     setValue,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<AvailabilityFormValues, unknown, AvailabilityData>({
     resolver: zodResolver(availabilitySchema),
@@ -51,6 +54,13 @@ export function AvailabilityStep() {
     setFurthestUnlockedStep(5);
     navigate(`/form/${STEPS[5].path}`);
   };
+
+  useEffect(() => {
+    if (validateOnMount) {
+      trigger(); // no argument = validate the whole step, populate every field's error at once
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // deliberately once-on-mount only — see note below
 
   return (
     <>

@@ -12,6 +12,7 @@ import { Button } from "@/components/Button";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { StepHeader } from "@/components/StepHeader";
+import { useEffect } from "react";
 
 export function ExperienceStep() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export function ExperienceStep() {
   const setFurthestUnlockedStep = useFormStore(
     (s) => s.setFurthestUnlockedStep,
   );
+  const validateOnMount = useFormStore((s) => s.validateOnMount);
 
   const blankRole = () => ({
     id: crypto.randomUUID(),
@@ -40,6 +42,7 @@ export function ExperienceStep() {
     control,
     handleSubmit,
     setValue,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<ExperienceFormValues, unknown, ExperienceData>({
     resolver: zodResolver(experienceSchema),
@@ -89,6 +92,12 @@ export function ExperienceStep() {
     navigate(`/form/${STEPS[2].path}`);
   };
 
+  useEffect(() => {
+    if (validateOnMount) {
+      trigger(); // no argument = validate the whole step, populate every field's error at once
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // deliberately once-on-mount only — see note below
   return (
     <>
       <StepHeader title={STEPS[1].label} description={STEPS[1].pageSubHeader} />

@@ -26,7 +26,7 @@ export const personalInfoSchema = z.object({
   phone: z
     .string()
     .min(1, "Phone number is required")
-    .refine(isValidPhoneNumber, "Enter a valid phone number"),
+    .refine(isValidPhoneNumber, "Enter a valid phone number"), // isValidPhoneNumber should return true to pass validation
 
   city: z.string().trim().min(1, "City is required"),
 

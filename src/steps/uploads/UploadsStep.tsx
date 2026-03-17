@@ -8,6 +8,7 @@ import { useFileStore } from "@/store/fileStore";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { StepHeader } from "@/components/StepHeader";
+import { useEffect } from "react";
 
 export function UploadsStep() {
   const navigate = useNavigate();
@@ -49,9 +50,19 @@ export function UploadsStep() {
     navigate(`/form/${STEPS[4].path}`);
   };
 
+  const validateOnMount = useFormStore((s) => s.validateOnMount);
+
+  useEffect(() => {
+    if (validateOnMount) {
+      trigger(); // no argument = validate the whole step, populate every field's error at once
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // deliberately once-on-mount only — see note below
+
   return (
     <>
       <StepHeader title={STEPS[3].label} description={STEPS[3].pageSubHeader} />
+
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
         <Controller
           name="resume"

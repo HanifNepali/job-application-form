@@ -8,7 +8,7 @@ import { ChipList } from "@/components/ChipList";
 import { Button } from "@/components/Button";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { StepHeader } from "@/components/StepHeader";
 
 export function SkillsLinksStep() {
@@ -18,11 +18,13 @@ export function SkillsLinksStep() {
   const setFurthestUnlockedStep = useFormStore(
     (s) => s.setFurthestUnlockedStep,
   );
+  const validateOnMount = useFormStore((s) => s.validateOnMount);
 
   const {
     register,
     control,
     handleSubmit,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<SkillsLinksData>({
     resolver: zodResolver(skillsLinksSchema),
@@ -69,6 +71,13 @@ export function SkillsLinksStep() {
     },
     [hookFormRef],
   );
+
+  useEffect(() => {
+    if (validateOnMount) {
+      trigger(); // no argument = validate the whole step, populate every field's error at once
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // deliberately once-on-mount only — see note below
 
   return (
     <>

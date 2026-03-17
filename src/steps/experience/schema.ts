@@ -20,7 +20,7 @@ const pastRoleSchema = z
   });
 
 export const experienceSchema = z.object({
-  currentRole: z.string().trim().min(1, "Current role is required"), // was: currentTitle
+  currentRole: z.string().trim().min(1, "Current role is required"),
 
   yearsOfExperience: z
     .string()
