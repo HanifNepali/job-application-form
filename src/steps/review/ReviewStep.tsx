@@ -20,6 +20,7 @@ export function ReviewStep() {
   const coverLetter = useFileStore((s) => s.coverLetter);
   const { personalInfo, experience, skillsLinks, availability } = data;
   const updateReview = useFormStore((s) => s.updateReview);
+  const setValidateOnMount = useFormStore((s) => s.setValidateOnMount);
   const navigate = useNavigate();
 
   const {
@@ -40,15 +41,15 @@ export function ReviewStep() {
     });
 
     if (!isValid && firstInvalidStepPath) {
+      setValidateOnMount(true);
       navigate(firstInvalidStepPath);
       return;
     }
 
-    // const validatedData = experienceSchema.parse(data.experience);
-    // console.log({ validatedData });
-
+    setValidateOnMount(false); // clear recovery mode — everything's genuinely valid now
     updateReview(values);
     // final re-validation + fake async submit goes here — next piece
+    alert("Application submitted successfully!"); // placeholder — see below
   };
 
   return (

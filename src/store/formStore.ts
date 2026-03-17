@@ -14,6 +14,7 @@ interface FormState {
   // re-validates everything too. This value only ever grows — see
   // setFurthestUnlockedStep below for why.
   furthestUnlockedStep: number;
+  validateOnMount: boolean; // true while recovering from a failed final-submit validation
 
   // Each takes a Partial<> patch rather than the full sub-object, so a
   // step's form (via RHF's onChange/onBlur) can push individual field
@@ -27,6 +28,7 @@ interface FormState {
   updateReview: (patch: Partial<FormData["review"]>) => void;
 
   setFurthestUnlockedStep: (stepIndex: number) => void;
+  setValidateOnMount: (value: boolean) => void;
 
   // Clears all persisted form data back to blank. Wired to the Phase 5
   // "reset / start over" UI action; does NOT touch the file store, which
@@ -39,6 +41,7 @@ export const useFormStore = create<FormState>()(
     (set) => ({
       data: initialFormData,
       furthestUnlockedStep: 0,
+      validateOnMount: false,
 
       updatePersonalInfo: (patch) =>
         set((state) => ({
@@ -85,7 +88,14 @@ export const useFormStore = create<FormState>()(
           furthestUnlockedStep: Math.max(state.furthestUnlockedStep, stepIndex),
         })),
 
-      reset: () => set({ data: initialFormData, furthestUnlockedStep: 0 }),
+      setValidateOnMount: (value) => set({ validateOnMount: value }),
+
+      reset: () =>
+        set({
+          data: initialFormData,
+          furthestUnlockedStep: 0,
+          validateOnMount: false,
+        }),
     }),
     {
       name: "job-application-form", // localStorage key
