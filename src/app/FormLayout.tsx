@@ -1,16 +1,27 @@
 import { Sidebar, SidebarTrigger } from "@/components/Sidebar";
 import { Stepper } from "@/components/Stepper";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { STEPS } from "@/lib/steps";
 import { SidebarProvider } from "@/providers/SidebarContext";
-import { Outlet } from "react-router-dom";
+import { useFormStore } from "@/store/formStore";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-// Shared shell for every step route. Router renders this once and swaps
-// only the <Outlet /> content when navigating between steps — so anything
-// that should persist across steps (stepper, theme toggle) lives here,
-// not inside individual step components.
-//
-// The Stepper itself isn't wired in yet — that's for a later phase
 export function FormLayout() {
+  //  ROUTE GUARD:
+  // if the user tries to navigate directly to a step they haven't unlocked yet,
+  // redirect them to the furthest unlocked step.
+  const location = useLocation();
+  const furthestUnlockedStep = useFormStore((s) => s.furthestUnlockedStep);
+
+  const currentPath = location.pathname.replace("/form/", "");
+  const currentIndex = STEPS.findIndex((s) => s.path === currentPath);
+
+  if (currentIndex !== -1 && currentIndex > furthestUnlockedStep) {
+    return (
+      <Navigate to={`/form/${STEPS[furthestUnlockedStep].path}`} replace />
+    );
+  }
+
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-canvas">

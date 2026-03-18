@@ -82,6 +82,11 @@
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
 }
 
+/* not applying this results in flashes of white screen when re-routing to pages on validations */
+body {
+  background-color: var(--color-canvas);
+}
+
 /* react-phone-number-input overrides — the package ships almost no
    layout constraints of its own, so every dimension below is
    intentional, not a copy-pasted default. */
