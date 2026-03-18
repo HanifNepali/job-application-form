@@ -18,7 +18,8 @@ export function SkillsLinksStep() {
   const setFurthestUnlockedStep = useFormStore(
     (s) => s.setFurthestUnlockedStep,
   );
-  const validateOnMount = useFormStore((s) => s.validateOnMount);
+  const STEP_INDEX = 2; // this file's own position in STEPS — 1 for Experience, 2 for Skills & Links, etc.
+  const furthestUnlockedStep = useFormStore((s) => s.furthestUnlockedStep);
 
   const {
     register,
@@ -73,7 +74,7 @@ export function SkillsLinksStep() {
   );
 
   useEffect(() => {
-    if (validateOnMount) {
+    if (furthestUnlockedStep > STEP_INDEX) {
       trigger(); // no argument = validate the whole step, populate every field's error at once
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
