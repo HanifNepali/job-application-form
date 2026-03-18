@@ -12,6 +12,8 @@ import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { StepHeader } from "@/components/StepHeader";
 import { useEffect } from "react";
+import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
+import { useUnsavedChangesWarning } from "@/lib/hooks";
 
 export function PersonalInfoStep() {
   const navigate = useNavigate();
@@ -29,7 +31,8 @@ export function PersonalInfoStep() {
     handleSubmit,
     setValue,
     trigger,
-    formState: { errors, isSubmitting, dirtyFields },
+    reset,
+    formState: { errors, isSubmitting, dirtyFields, isDirty },
   } = useForm<PersonalInfoData>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: data, // hydrate from the persisted store, not a blank form
@@ -38,9 +41,13 @@ export function PersonalInfoStep() {
     shouldFocusError: true,
   });
 
+  const { blocker, allowNextNavigation } = useUnsavedChangesWarning(isDirty);
+
   const onSubmit = (values: PersonalInfoData) => {
     updatePersonalInfo(values);
     setFurthestUnlockedStep(1); // index of the next step, "Experience"
+    allowNextNavigation(); // a plain function call in an event handler — nothing ref-shaped crosses any boundary here
+    reset(values);
     navigate(`/form/${STEPS[1].path}`);
   };
 
@@ -140,6 +147,8 @@ export function PersonalInfoStep() {
           </Button>
         </div>
       </form>
+
+      <UnsavedChangesModal blocker={blocker} />
     </>
   );
 }

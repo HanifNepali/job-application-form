@@ -10,6 +10,8 @@ import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { useCallback, useEffect } from "react";
 import { StepHeader } from "@/components/StepHeader";
+import { useUnsavedChangesWarning } from "@/lib/hooks";
+import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
 
 export function SkillsLinksStep() {
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ export function SkillsLinksStep() {
     control,
     handleSubmit,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<SkillsLinksData>({
     resolver: zodResolver(skillsLinksSchema),
     defaultValues: data,
@@ -54,9 +56,12 @@ export function SkillsLinksStep() {
   // Destructure the stable ref function directly
   const { ref: hookFormRef } = skillsField;
 
+  const { blocker, allowNextNavigation } = useUnsavedChangesWarning(isDirty);
+
   const onSubmit = (values: SkillsLinksData) => {
     updateSkillsLinks(values);
     setFurthestUnlockedStep(3);
+    allowNextNavigation();
     navigate(`/form/${STEPS[3].path}`);
   };
 
@@ -136,6 +141,8 @@ export function SkillsLinksStep() {
           </Button>
         </div>
       </form>
+
+      <UnsavedChangesModal blocker={blocker} />
     </>
   );
 }

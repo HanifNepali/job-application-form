@@ -16,6 +16,8 @@ import { StepHeader } from "@/components/StepHeader";
 import { FieldYesNo } from "@/components/FieldYesNo";
 import { RELOCATION_REGIONS } from "@/lib/constants";
 import { useEffect } from "react";
+import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
+import { useUnsavedChangesWarning } from "@/lib/hooks";
 
 export function AvailabilityStep() {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ export function AvailabilityStep() {
     handleSubmit,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<AvailabilityFormValues, unknown, AvailabilityData>({
     resolver: zodResolver(availabilitySchema),
     defaultValues: data,
@@ -50,9 +52,12 @@ export function AvailabilityStep() {
     name: "willingToRelocate",
   });
 
+  const { blocker, allowNextNavigation } = useUnsavedChangesWarning(isDirty);
+
   const onSubmit = (values: AvailabilityData) => {
     updateAvailability(values);
     setFurthestUnlockedStep(5);
+    allowNextNavigation();
     navigate(`/form/${STEPS[5].path}`);
   };
 
@@ -137,6 +142,8 @@ export function AvailabilityStep() {
           </Button>
         </div>
       </form>
+
+      <UnsavedChangesModal blocker={blocker} />
     </>
   );
 }

@@ -13,6 +13,8 @@ import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { StepHeader } from "@/components/StepHeader";
 import { useEffect } from "react";
+import { useUnsavedChangesWarning } from "@/lib/hooks";
+import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
 
 export function ExperienceStep() {
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ export function ExperienceStep() {
     handleSubmit,
     setValue,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<ExperienceFormValues, unknown, ExperienceData>({
     resolver: zodResolver(experienceSchema),
     defaultValues: {
@@ -87,9 +89,12 @@ export function ExperienceStep() {
     }
   };
 
+  const { blocker, allowNextNavigation } = useUnsavedChangesWarning(isDirty);
+
   const onSubmit = (values: ExperienceData) => {
     updateExperience(values); // values.yearsOfExperience is a real number here
     setFurthestUnlockedStep(2);
+    allowNextNavigation();
     navigate(`/form/${STEPS[2].path}`);
   };
 
@@ -192,6 +197,7 @@ export function ExperienceStep() {
           </Button>
         </div>
       </form>
+      <UnsavedChangesModal blocker={blocker} />
     </>
   );
 }
