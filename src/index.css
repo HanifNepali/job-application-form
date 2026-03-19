@@ -87,6 +87,17 @@ body {
   background-color: var(--color-canvas);
 }
 
+/* Focus set programmatically by useFocusTrap's initial-focus logic isn't
+   reliably treated as :focus-visible by the browser (its heuristic
+   expects a preceding keyboard event, which a freshly-opened modal
+   doesn't have). Force the ring to show regardless of trigger, since
+   a modal's initial focus should be visible to every user, not just
+   keyboard users specifically. */
+[data-autofocus]:focus {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
 /* react-phone-number-input overrides — the package ships almost no
    layout constraints of its own, so every dimension below is
    intentional, not a copy-pasted default. */

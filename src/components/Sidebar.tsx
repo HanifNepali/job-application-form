@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { useSidebar } from "@/providers/SidebarContext";
+import { useFocusTrap } from "@/lib/hooks";
 
 export function SidebarTrigger() {
   const { isOpen, toggle } = useSidebar();
@@ -25,6 +26,9 @@ export function SidebarTrigger() {
 
 export function Sidebar({ children }: { children: ReactNode }) {
   const { isOpen, close } = useSidebar();
+  const containerRef = useFocusTrap<HTMLElement>(isOpen, {
+    initialFocusSelector: "[data-autofocus]",
+  });
 
   return (
     <>
@@ -38,6 +42,7 @@ export function Sidebar({ children }: { children: ReactNode }) {
 
       <aside
         id="form-sidebar"
+        ref={containerRef}
         className={`flex flex-col fixed inset-y-0 left-0 z-30 w-80 border-r border-line
       bg-surface p-6 transition-transform duration-200 ease-in-out
       nav:sticky nav:top-0 nav:translate-x-0 nav:shrink-0 nav:h-screen

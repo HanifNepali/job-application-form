@@ -39,6 +39,7 @@ export function Stepper() {
               <Link
                 to={`/form/${step.path}`}
                 onClick={close}
+                data-autofocus={isActiveStep ? true : undefined}
                 aria-current={isActiveStep ? "step" : undefined}
                 aria-disabled={!isReachableStep}
                 className={`relative z-10 flex items-center gap-3 rounded-md

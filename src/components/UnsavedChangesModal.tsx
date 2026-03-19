@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import type { Blocker } from "react-router-dom";
 import { Button } from "@/components/Button";
+import { useFocusTrap } from "@/lib/hooks";
 
 interface UnsavedChangesModalProps {
   blocker: Blocker;
@@ -9,6 +10,9 @@ interface UnsavedChangesModalProps {
 
 export function UnsavedChangesModal({ blocker }: UnsavedChangesModalProps) {
   const isOpen = blocker.state === "blocked";
+  const containerRef = useFocusTrap<HTMLDivElement>(isOpen, {
+    initialFocusSelector: "[data-autofocus]",
+  });
 
   useEffect(() => {
     if (!isOpen) return;
@@ -30,6 +34,7 @@ export function UnsavedChangesModal({ blocker }: UnsavedChangesModalProps) {
     >
       <div
         role="alertdialog"
+        ref={containerRef}
         aria-modal="true"
         aria-labelledby="unsaved-changes-title"
         aria-describedby="unsaved-changes-description"
@@ -62,7 +67,11 @@ export function UnsavedChangesModal({ blocker }: UnsavedChangesModalProps) {
         </p>
 
         <div className="mt-6 flex justify-end gap-3">
-          <Button variant="outline" onClick={() => blocker.reset?.()}>
+          <Button
+            variant="outline"
+            data-autofocus
+            onClick={() => blocker.reset?.()}
+          >
             Stay on this page
           </Button>
           <Button variant="primary" onClick={() => blocker.proceed?.()}>
