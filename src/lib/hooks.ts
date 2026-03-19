@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useBlocker } from "react-router-dom";
 
 export function useUnsavedChangesWarning(isDirty: boolean) {
@@ -14,4 +14,77 @@ export function useUnsavedChangesWarning(isDirty: boolean) {
   };
 
   return { blocker, allowNextNavigation };
+}
+
+const FOCUSABLE_SELECTOR = `a[href], button:not([disabled]), textarea:not([disabled]),
+  input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])`;
+
+interface UseFocusTrapOptions {
+  /** CSS selector for the element to focus first. Falls back to the
+   *  first focusable element in the container if omitted or not found. */
+  initialFocusSelector?: string;
+}
+
+export function useFocusTrap<T extends HTMLElement>(
+  isActive: boolean,
+  options: UseFocusTrapOptions = {},
+) {
+  const containerRef = useRef<T>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const { initialFocusSelector } = options;
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Creates an array of all focusable elements within the container, in DOM order.
+    // return [] if "container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)" matches nothing
+    const getFocusableElements = () =>
+      Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+
+    // Move focus inside immediately — container itself as a fallback if
+    // it happens to contain no focusable children yet.
+
+    const preferredTarget = initialFocusSelector
+      ? container.querySelector<HTMLElement>(initialFocusSelector)
+      : null;
+
+    const focusableElements = getFocusableElements();
+
+    const target = preferredTarget ?? focusableElements[0] ?? container;
+    target.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      if (focusableElements.length === 0) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+
+      // Wrap manually — cycling Tab past the last element back to the
+      // first, and Shift+Tab past the first back to the last, is what
+      // actually makes it a "trap" rather than just an initial focus push.
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previouslyFocusedRef.current?.focus(); // return focus to wherever it came from
+    };
+  }, [isActive, initialFocusSelector]);
+
+  return containerRef;
 }
