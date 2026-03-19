@@ -13,6 +13,22 @@ export function useUnsavedChangesWarning(isDirty: boolean) {
     skipNextBlockRef.current = true;
   };
 
+  // Tab close / refresh / typing a new URL — none of these go through
+  // React Router at all, so useBlocker (above) can't see or stop them.
+  // This is the browser's own separate mechanism: calling
+  // preventDefault() here is what triggers its native "leave site?" dialog.
+  // We cannot customize its text, buttons, or styling
+  // that's a hard platform restriction, not a scoping choice.
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!isDirty) return;
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
+
   return { blocker, allowNextNavigation };
 }
 
