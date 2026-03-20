@@ -26,6 +26,9 @@ export function SidebarTrigger() {
 
 export function Sidebar({ children }: { children: ReactNode }) {
   const { isOpen, close } = useSidebar();
+
+  // For accessibility, we use useFocusTrap to trap focus within the sidebar
+  // Please refer to the useFocusTrap hook implementation in src/lib/hooks.ts for details on how it works.
   const containerRef = useFocusTrap<HTMLElement>(isOpen, {
     initialFocusSelector: "[data-autofocus]",
   });

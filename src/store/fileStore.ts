@@ -5,6 +5,7 @@ interface FileState {
   coverLetter: File | null;
   setResume: (file: File | null) => void; // a user can remove the file as well
   setCoverLetter: (file: File | null) => void; // same as above
+  reset: () => void; // clears both files
 }
 
 // Intentionally NOT wrapped in zustand's `persist` middleware — File/Blob
@@ -17,4 +18,5 @@ export const useFileStore = create<FileState>()((set) => ({
   coverLetter: null,
   setResume: (file) => set({ resume: file }),
   setCoverLetter: (file) => set({ coverLetter: file }),
+  reset: () => set({ resume: null, coverLetter: null }),
 }));

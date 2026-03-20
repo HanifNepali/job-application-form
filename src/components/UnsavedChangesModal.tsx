@@ -10,6 +10,9 @@ interface UnsavedChangesModalProps {
 
 export function UnsavedChangesModal({ blocker }: UnsavedChangesModalProps) {
   const isOpen = blocker.state === "blocked";
+
+  // For accessibility, we use useFocusTrap to trap focus within the modal
+  // Please refer to the useFocusTrap hook implementation in src/lib/hooks.ts for details on how it works.
   const containerRef = useFocusTrap<HTMLDivElement>(isOpen, {
     initialFocusSelector: "[data-autofocus]",
   });
@@ -22,6 +25,7 @@ export function UnsavedChangesModal({ blocker }: UnsavedChangesModalProps) {
     };
 
     document.addEventListener("keydown", handleKeyDown);
+
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, blocker]);
 

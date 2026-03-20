@@ -13,6 +13,8 @@ import { Button } from "@/components/Button";
 import { useNavigate } from "react-router-dom";
 import { StepHeader } from "@/components/StepHeader";
 import { countryLabel, regionLabels } from "@/lib/utils";
+import { useState } from "react";
+import { ResetConfirmModal } from "@/components/ResetConfirmationModal";
 
 export function ReviewStep() {
   const data = useFormStore((s) => s.data);
@@ -21,6 +23,9 @@ export function ReviewStep() {
   const { personalInfo, experience, skillsLinks, availability } = data;
   const updateReview = useFormStore((s) => s.updateReview);
   const navigate = useNavigate();
+  const resetForm = useFormStore((s) => s.reset);
+  const resetFiles = useFileStore((s) => s.reset);
+  const [isResetOpen, setIsResetOpen] = useState(false);
 
   const {
     register,
@@ -47,6 +52,13 @@ export function ReviewStep() {
     updateReview(values);
     // final re-validation + fake async submit goes here — next piece
     alert("Application submitted successfully!"); // placeholder — see below
+  };
+
+  const handleConfirmReset = () => {
+    resetForm();
+    resetFiles();
+    setIsResetOpen(false);
+    navigate(`/form/${STEPS[0].path}`);
   };
 
   return (
@@ -175,12 +187,22 @@ export function ReviewStep() {
             {...register("termsAccepted")}
           />
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-end gap-4 pt-4">
+            <Button variant="destructive" onClick={() => setIsResetOpen(true)}>
+              Clear All Form Data
+            </Button>
             <Button type="submit" disabled={isSubmitting}>
               Submit Application
             </Button>
           </div>
         </form>
+
+        {/* This modal uses data-autofocus on "Keep Editing" button */}
+        <ResetConfirmModal
+          isOpen={isResetOpen}
+          onCancel={() => setIsResetOpen(false)}
+          onConfirm={handleConfirmReset}
+        />
       </div>
     </>
   );
