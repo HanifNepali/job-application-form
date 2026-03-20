@@ -15,6 +15,8 @@ import { StepHeader } from "@/components/StepHeader";
 import { useEffect } from "react";
 import { useUnsavedChangesWarning } from "@/lib/hooks";
 import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
+import FormFooter from "@/components/FormFooter";
+import NextButton from "@/components/NextButton";
 
 export function ExperienceStep() {
   const navigate = useNavigate();
@@ -97,6 +99,9 @@ export function ExperienceStep() {
     allowNextNavigation();
     navigate(`/form/${STEPS[2].path}`);
   };
+
+  // Check if any errors exist explicitly:
+  const hasErrors = Object.keys(errors).length > 0;
 
   useEffect(() => {
     if (furthestUnlockedStep > STEP_INDEX) {
@@ -191,11 +196,9 @@ export function ExperienceStep() {
           Add Role
         </Button>
 
-        <div className="flex justify-end pt-2">
-          <Button type="submit" disabled={isSubmitting}>
-            Next
-          </Button>
-        </div>
+        <FormFooter>
+          <NextButton isSubmitting={isSubmitting} formHasError={hasErrors} />
+        </FormFooter>
       </form>
       <UnsavedChangesModal blocker={blocker} />
     </>

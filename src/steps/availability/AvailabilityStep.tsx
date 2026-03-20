@@ -8,7 +8,6 @@ import {
 } from "./schema";
 import { FieldCheckboxGroup } from "@/components/FieldCheckboxGroup";
 import { FieldTextInput } from "@/components/FieldTextInput";
-import { Button } from "@/components/Button";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { mockJobPosting } from "@/lib/jobPosting";
@@ -18,6 +17,8 @@ import { RELOCATION_REGIONS } from "@/lib/constants";
 import { useEffect } from "react";
 import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
 import { useUnsavedChangesWarning } from "@/lib/hooks";
+import FormFooter from "@/components/FormFooter";
+import NextButton from "@/components/NextButton";
 
 export function AvailabilityStep() {
   const navigate = useNavigate();
@@ -60,6 +61,9 @@ export function AvailabilityStep() {
     allowNextNavigation();
     navigate(`/form/${STEPS[5].path}`);
   };
+
+  // Check if any errors exist explicitly:
+  const hasErrors = Object.keys(errors).length > 0;
 
   useEffect(() => {
     if (furthestUnlockedStep > STEP_INDEX) {
@@ -136,11 +140,9 @@ export function AvailabilityStep() {
           />
         </div>
 
-        <div className="flex justify-end pt-2">
-          <Button type="submit" disabled={isSubmitting}>
-            Next
-          </Button>
-        </div>
+        <FormFooter>
+          <NextButton isSubmitting={isSubmitting} formHasError={hasErrors} />
+        </FormFooter>
       </form>
 
       <UnsavedChangesModal blocker={blocker} />

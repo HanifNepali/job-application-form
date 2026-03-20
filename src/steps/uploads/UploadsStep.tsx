@@ -3,12 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { uploadsSchema, type UploadsData } from "./schema";
 import { FieldFileInput } from "@/components/FieldFileInput";
-import { Button } from "@/components/Button";
 import { useFileStore } from "@/store/fileStore";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { StepHeader } from "@/components/StepHeader";
 import { useEffect } from "react";
+import FormFooter from "@/components/FormFooter";
+import NextButton from "@/components/NextButton";
 
 export function UploadsStep() {
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ export function UploadsStep() {
     setFurthestUnlockedStep(4);
     navigate(`/form/${STEPS[4].path}`);
   };
+
+  // Check if any errors exist explicitly:
+  const hasErrors = Object.keys(errors).length > 0;
 
   useEffect(() => {
     if (furthestUnlockedStep > STEP_INDEX) {
@@ -100,11 +104,9 @@ export function UploadsStep() {
           )}
         />
 
-        <div className="flex justify-end pt-2">
-          <Button type="submit" disabled={isSubmitting}>
-            Next
-          </Button>
-        </div>
+        <FormFooter>
+          <NextButton isSubmitting={isSubmitting} formHasError={hasErrors} />
+        </FormFooter>
       </form>
     </>
   );

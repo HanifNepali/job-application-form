@@ -5,13 +5,14 @@ import { skillsLinksSchema, type SkillsLinksData } from "./schema";
 import { FieldTextInput } from "@/components/FieldTextInput";
 import { FieldChipsInput } from "@/components/FieldChipsInput";
 import { ChipList } from "@/components/ChipList";
-import { Button } from "@/components/Button";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
 import { useCallback, useEffect } from "react";
 import { StepHeader } from "@/components/StepHeader";
 import { useUnsavedChangesWarning } from "@/lib/hooks";
 import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
+import FormFooter from "@/components/FormFooter";
+import NextButton from "@/components/NextButton";
 
 export function SkillsLinksStep() {
   const navigate = useNavigate();
@@ -78,6 +79,9 @@ export function SkillsLinksStep() {
     [hookFormRef],
   );
 
+  // Check if any errors exist explicitly:
+  const hasErrors = Object.keys(errors).length > 0;
+
   useEffect(() => {
     if (furthestUnlockedStep > STEP_INDEX) {
       trigger(); // no argument = validate the whole step, populate every field's error at once
@@ -135,11 +139,9 @@ export function SkillsLinksStep() {
           </div>
         </div>
 
-        <div className="flex justify-end pt-6">
-          <Button type="submit" disabled={isSubmitting}>
-            Next
-          </Button>
-        </div>
+        <FormFooter>
+          <NextButton isSubmitting={isSubmitting} formHasError={hasErrors} />
+        </FormFooter>
       </form>
 
       <UnsavedChangesModal blocker={blocker} />

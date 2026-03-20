@@ -6,7 +6,6 @@ import { personalInfoSchema, type PersonalInfoData } from "./schema";
 import { FieldTextInput } from "@/components/FieldTextInput";
 import { FieldSelect } from "@/components/FieldSelect";
 import { FieldError } from "@/components/FieldError";
-import { Button } from "@/components/Button";
 import { countryOptions } from "@/lib/utils";
 import { useFormStore } from "@/store/formStore";
 import { STEPS } from "@/lib/steps";
@@ -14,6 +13,8 @@ import { StepHeader } from "@/components/StepHeader";
 import { useEffect } from "react";
 import { UnsavedChangesModal } from "@/components/UnsavedChangesModal";
 import { useUnsavedChangesWarning } from "@/lib/hooks";
+import FormFooter from "@/components/FormFooter";
+import NextButton from "@/components/NextButton";
 
 export function PersonalInfoStep() {
   const navigate = useNavigate();
@@ -50,6 +51,9 @@ export function PersonalInfoStep() {
     reset(values);
     navigate(`/form/${STEPS[1].path}`);
   };
+
+  // Check if any errors exist explicitly:
+  const hasErrors = Object.keys(errors).length > 0;
 
   useEffect(() => {
     // if (validateOnMount) {
@@ -141,11 +145,9 @@ export function PersonalInfoStep() {
           />
         </div>
 
-        <div className="flex justify-end pt-2">
-          <Button type="submit" disabled={isSubmitting}>
-            Next
-          </Button>
-        </div>
+        <FormFooter>
+          <NextButton isSubmitting={isSubmitting} formHasError={hasErrors} />
+        </FormFooter>
       </form>
 
       <UnsavedChangesModal blocker={blocker} />
