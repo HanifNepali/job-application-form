@@ -50,6 +50,9 @@ describe("Unsaved changes modal", () => {
     const user = userEvent.setup();
     const router = renderStep("/form/personal-info");
 
+    // Clear the pre-populated "Jenny" text else It will Result in JennyJane
+    await user.clear(screen.getByLabelText("First Name"));
+
     await user.type(screen.getByLabelText("First Name"), "Jane");
     await user.click(screen.getByRole("link", { name: /experience/i }));
     await screen.findByRole("alertdialog");
@@ -59,7 +62,6 @@ describe("Unsaved changes modal", () => {
     );
 
     expect(router.state.location.pathname).toBe("/form/experience");
-    screen.debug();
 
     // The typed-but-never-submitted "Jane" must NOT have reached the
     // persisted store — this is the actual point of the whole feature.
