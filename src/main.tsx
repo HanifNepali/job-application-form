@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@/providers/ThemeContext";
-import { router } from "./app/router";
+import { router } from "./app/route/router";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
