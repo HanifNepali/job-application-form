@@ -65,8 +65,6 @@ describe("ExperienceStep — currently-working-here exclusivity", () => {
     const user = userEvent.setup();
     renderStep("/form/experience");
 
-    screen.debug();
-
     await user.type(screen.getByLabelText("Current Role / Title"), "Engineer");
     await user.type(screen.getByLabelText("Total Years of Experience"), "5");
     await user.type(screen.getByLabelText("Company"), "XYZ Corp");
