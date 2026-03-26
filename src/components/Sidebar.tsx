@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { useSidebar } from "@/providers/SidebarContext";
 import { useFocusTrap } from "@/lib/hooks";
@@ -32,6 +32,16 @@ export function Sidebar({ children }: { children: ReactNode }) {
   const containerRef = useFocusTrap<HTMLElement>(isOpen, {
     initialFocusSelector: "[data-autofocus]",
   });
+
+  // Close the sidebar when a user presses "Esc"
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, close]);
 
   return (
     <>

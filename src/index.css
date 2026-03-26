@@ -40,7 +40,7 @@
   /* Text */
   --color-ink: #18181b;
   --color-ink-secondary: #52525b;
-  --color-ink-muted: #a1a1aa;
+  --color-ink-muted: #6b6b70;
 
   /* Accent */
   --color-accent: #18181b;
@@ -48,7 +48,7 @@
   --color-accent-hover: #27272a;
 
   /* Semantic (validation states, needed from Phase 3 onward) */
-  --color-error: #dc2626;
+  --color-error: #b91c1c;
   --color-error-surface: #fef2f2;
   --color-success: #16a34a;
 
@@ -80,6 +80,24 @@
   --color-success: #4ade80;
 
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+}
+
+/* The Sidebar's slide transition (transition-transform duration-200) 
+and any other animated UI never checks this. 
+For users with vestibular disorders who've set this OS-level preference, 
+motion should be minimized — a real, standard accessibility requirement, 
+Meant to catch every current and future animated element 
+without needing to remember to add the guard individually each time.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* not applying this results in flashes of white screen when re-routing to pages on validations */
