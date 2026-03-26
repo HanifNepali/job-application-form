@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { Sidebar, SidebarTrigger } from "@/components/Sidebar";
 import { Stepper } from "@/components/Stepper";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -25,6 +26,12 @@ export function FormLayout() {
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-canvas">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50"
+        >
+          <Button variant="outline">Skip to main content</Button>
+        </a>
         <header className="relative z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-3 nav:hidden">
           <span className="font-semibold text-ink">Job Application</span>
           <SidebarTrigger />
@@ -40,7 +47,7 @@ export function FormLayout() {
             </div>
           </Sidebar>
 
-          <main className="min-w-0 flex-1 p-6 nav:p-16">
+          <main id="main-content" className="min-w-0 flex-1 p-6 nav:p-16">
             <Outlet />
           </main>
         </div>
