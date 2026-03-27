@@ -110,7 +110,6 @@ export function PersonalInfoStep() {
                     id="phone"
                     international
                     value={field.value}
-                    onChange={field.onChange}
                     onBlur={field.onBlur}
                     onCountryChange={(selectedCountry) => {
                       // Auto-populate Country from the phone's selected country, but
@@ -121,6 +120,13 @@ export function PersonalInfoStep() {
                           shouldDirty: false, // this is an auto-fill, not a real user edit
                         });
                       }
+                    }}
+                    // By design, when a user completely clears out react-phone-number-input
+                    // or erases it past a valid parsing state, the library explicitly emits undefined as its argument
+                    // to denote an empty state. The UI retains whatever fallback or country placeholder logic
+                    // it has internally, making it look like a previous state while the data stream sends undefined
+                    onChange={(value) => {
+                      field.onChange(value || ""); // Normalize undefined to an empty string for RHF
                     }}
                   />
                 )}

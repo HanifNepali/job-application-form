@@ -18,7 +18,7 @@ export function ThemeToggle() {
         aria-checked={isDark}
         aria-label="Toggle dark mode"
         onClick={toggleTheme}
-        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full cursor-pointer
           transition-colors focus-visible:outline 
           focus-visible:outline-offset-2 focus-visible:outline-accent
           ${isDark ? "bg-accent" : "bg-line"}`}
