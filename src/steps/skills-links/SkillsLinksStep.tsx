@@ -70,7 +70,7 @@ export function SkillsLinksStep() {
    * Stable wrapper to safely attach the DOM element to React Hook Form.
    * Prevents "Cannot access refs during render" errors.
    *
-   * @see {@link ../../../documentation/callback-refs.md} For full implementation details.
+   * @see {@link ../../../documentation/flow/callback-refs.md} For full implementation details.
    */
   const setSkillsRef = useCallback(
     (node: HTMLInputElement | null) => {
