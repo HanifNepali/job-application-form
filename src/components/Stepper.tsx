@@ -22,7 +22,8 @@ export function Stepper() {
       <ol>
         {STEPS.map((step, index) => {
           const isActiveStep = location.pathname.endsWith(step.path);
-          const isReachableStep = index < furthestUnlockedStep;
+          const isReachableStep = index <= furthestUnlockedStep;
+          const isLineReached = index < furthestUnlockedStep;
           const isLastStep = index === STEPS.length - 1;
 
           return (
@@ -31,7 +32,7 @@ export function Stepper() {
                 <span
                   aria-hidden="true"
                   className={`absolute left-4 top-8 h-full w-px ${
-                    isReachableStep ? "bg-accent" : "bg-line"
+                    isLineReached ? "bg-accent" : "bg-line"
                   }`}
                 />
               )}
