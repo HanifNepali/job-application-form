@@ -17,7 +17,9 @@ export function SummarySection({
   return (
     <section className="rounded-lg border border-line p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-ink mb-2">{title}</h2>
+        <h2 className="font-serif text-xl font-semibold text-ink mb-2">
+          {title}
+        </h2>
         {allowEdit && editPath && (
           <Link
             to={editPath}
