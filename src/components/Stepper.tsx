@@ -2,6 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { STEPS } from "@/lib/steps";
 import { useFormStore } from "@/store/formStore";
 import { useSidebar } from "@/providers/SidebarContext";
+import { motion, useReducedMotion } from "motion/react";
+import { useStagger, useFadeUp } from "@/lib/motionVariants";
 
 export function Stepper() {
   const location = useLocation();
@@ -13,13 +15,17 @@ export function Stepper() {
     location.pathname.endsWith(s.path),
   );
 
+  const container = useStagger({ staggerChildren: 0.25 });
+  const item = useFadeUp({ duration: 0.35, yOffset: 15 });
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <nav aria-label="Form steps">
       <p className="mb-6 text-xs font-medium uppercase tracking-wide text-ink-muted">
         Step {currentIndex + 1} of {STEPS.length}
       </p>
 
-      <ol>
+      <motion.ol initial="hidden" animate="visible" variants={container}>
         {STEPS.map((step, index) => {
           const isActiveStep = location.pathname.endsWith(step.path);
           const isReachableStep = index <= furthestUnlockedStep;
@@ -27,14 +33,28 @@ export function Stepper() {
           const isLastStep = index === STEPS.length - 1;
 
           return (
-            <li key={step.id} className="relative pb-20 last:pb-0">
+            <motion.li
+              variants={item}
+              key={step.id}
+              className="relative pb-20 last:pb-0"
+            >
               {!isLastStep && (
                 <span
                   aria-hidden="true"
-                  className={`absolute left-4 top-8 h-full w-px ${
-                    isLineReached ? "bg-accent" : "bg-line"
-                  }`}
-                />
+                  className="absolute left-4 top-8 h-full w-px"
+                >
+                  <motion.span
+                    className="block h-full w-full bg-accent"
+                    style={{ transformOrigin: "top" }}
+                    initial={{ scaleY: 0 }} // 1. Force initial state to 0
+                    animate={{ scaleY: isLineReached ? 1 : 0 }} // 2. Explicitly toggle 0 and 1
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { duration: 2.75, ease: "easeOut" }
+                    }
+                  />
+                </span>
               )}
 
               <Link
@@ -79,10 +99,10 @@ export function Stepper() {
                   </span>
                 </span>
               </Link>
-            </li>
+            </motion.li>
           );
         })}
-      </ol>
+      </motion.ol>
     </nav>
   );
 }
