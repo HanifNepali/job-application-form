@@ -76,6 +76,10 @@ export function FieldFileInput({
         )}
       </div>
 
+      <p className="my-1 block text-sm font-medium text-ink-muted">
+        Allowed file types - .doc, .docx, .pdf
+      </p>
+
       <FieldError id={errorId} message={error} />
     </div>
   );
