@@ -9,9 +9,10 @@ import { SkillsLinksStep } from "@/steps/skills-links/SkillsLinksStep";
 import { UploadsStep } from "@/steps/uploads/UploadsStep";
 import { AvailabilityStep } from "@/steps/availability/AvailabilityStep";
 import { ReviewStep } from "@/steps/review/ReviewStep";
+import { LandingPage } from "@/pages/LandingPage";
 
 export const routes = [
-  { path: "/", element: <Navigate to={`/form/${STEPS[0].path}`} replace /> },
+  { path: "/", element: <LandingPage /> },
   {
     path: "/form",
     element: <FormLayout />,
@@ -25,5 +26,5 @@ export const routes = [
       { path: "review", element: <ReviewStep /> },
     ],
   },
-  { path: "*", element: <Navigate to={`/form/${STEPS[0].path}`} replace /> },
+  { path: "*", element: <Navigate to="/" replace /> },
 ];
