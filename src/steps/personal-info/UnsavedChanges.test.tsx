@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import { renderStep } from "@/test/renderStep";
@@ -39,7 +39,11 @@ describe("Unsaved changes modal", () => {
       screen.getByRole("button", { name: /stay on this page/i }),
     );
 
-    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    // AnimatePresence keeps the modal mounted through its exit transition —
+    // it no longer disappears synchronously on click, so this needs to poll
+    // for removal rather than assert it instantly.
+    await waitForElementToBeRemoved(() => screen.queryByRole("alertdialog"));
+
     expect(router.state.location.pathname).toBe("/form/personal-info");
     expect(screen.getByLabelText("First Name")).toHaveValue("Jane"); // typed data survives the cancel
   });
