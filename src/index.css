@@ -7,6 +7,9 @@
   --color-canvas: var(--color-canvas);
   --color-surface: var(--color-surface);
   --color-line: var(--color-line);
+  --color-sidebar: var(--color-sidebar);
+  --color-accent-secondary: var(--color-accent-secondary);
+  --color-stepper-description: var(--color-stepper-description);
 
   --color-ink: var(--color-ink);
   --color-ink-secondary: var(--color-ink-secondary);
@@ -38,6 +41,10 @@
   --color-canvas: #f5f5f7;
   --color-surface: #ffffff;
   --color-line: #e2e2e6;
+  --color-sidebar: #1c1c1f;
+  /* --color-sidebar: #1c2907; */
+  --color-accent-secondary: #dd8d00;
+  --color-stepper-description: #868076;
 
   /* Text */
   --color-ink: #18181b;
@@ -65,10 +72,10 @@
 }
 
 .dark {
-  --color-canvas: #0f0f11;
+  --color-canvas: #171718;
   --color-surface: #1c1c1f;
   --color-line: #2e2e33;
-
+  --color-sidebar: #1c1c1f;
   --color-ink: #f4f4f5;
   --color-ink-secondary: #a1a1aa;
   --color-ink-muted: #6b6b70;
@@ -114,8 +121,8 @@ body {
    a modal's initial focus should be visible to every user, not just
    keyboard users specifically. */
 [data-autofocus]:focus {
-  outline: 1px solid var(--color-accent);
-  outline-offset: 1px;
+  outline: 2px solid var(--color-stepper-description);
+  outline-offset: 2px;
 }
 
 /* react-phone-number-input overrides — the package ships almost no

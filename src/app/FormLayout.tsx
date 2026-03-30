@@ -33,8 +33,10 @@ export function FormLayout() {
         >
           <Button variant="outline">Skip to main content</Button>
         </a>
-        <header className="relative z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-3 nav:hidden">
-          <span className="font-serif font-bold text-ink">Job Application</span>
+        <header className="relative z-30 flex items-center justify-between border-b border-line bg-sidebar px-4 py-3 nav:hidden">
+          <span className="font-serif font-bold text-white/60">
+            Job Application Form
+          </span>
           <SidebarTrigger />
         </header>
 
@@ -43,14 +45,14 @@ export function FormLayout() {
             <Link
               to="/"
               onClick={close}
-              className="flex items-center gap-2 mb-8 text-ink-muted hover:text-ink"
+              className="flex items-center gap-2 mb-8 text-ink-muted hover:text-white/60"
             >
               <ArrowLeft className="h-4 w-4" /> Back
             </Link>
             <div className="mt-2">
               <Stepper />
             </div>
-            <div className="mt-auto pt-8 border-t border-line">
+            <div className="mt-auto pt-8 border-t border-line/25">
               <ThemeToggle />
             </div>
           </Sidebar>
