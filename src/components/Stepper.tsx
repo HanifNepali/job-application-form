@@ -22,7 +22,7 @@ export function Stepper() {
       <ol>
         {STEPS.map((step, index) => {
           const isActiveStep = location.pathname.endsWith(step.path);
-          const isReachableStep = index <= furthestUnlockedStep;
+          const isReachableStep = index < furthestUnlockedStep;
           const isLastStep = index === STEPS.length - 1;
 
           return (
