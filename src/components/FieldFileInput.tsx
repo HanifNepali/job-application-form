@@ -57,7 +57,7 @@ export function FieldFileInput({
         />
 
         {value && (
-          <div className="flex items-center gap-2 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink">
+          <div className="flex items-center gap-2 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink ml-2">
             <span className="max-w-55 truncate">
               {value.name}{" "}
               <span className="text-ink-muted">
@@ -75,6 +75,10 @@ export function FieldFileInput({
           </div>
         )}
       </div>
+
+      <p className="my-1 block text-sm font-medium text-ink-muted">
+        Allowed file types - .doc, .docx, .pdf
+      </p>
 
       <FieldError id={errorId} message={error} />
     </div>

@@ -33,7 +33,7 @@ export function FormLayout() {
           <Button variant="outline">Skip to main content</Button>
         </a>
         <header className="relative z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-3 nav:hidden">
-          <span className="font-semibold text-ink">Job Application</span>
+          <span className="font-serif font-bold text-ink">Job Application</span>
           <SidebarTrigger />
         </header>
 

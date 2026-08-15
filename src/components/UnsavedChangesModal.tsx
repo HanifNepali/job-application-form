@@ -56,7 +56,7 @@ export function UnsavedChangesModal({ blocker }: UnsavedChangesModalProps) {
             type="button"
             onClick={() => blocker.reset?.()}
             aria-label="Close"
-            className="text-ink-muted hover:text-ink"
+            className="text-ink-muted hover:text-ink cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>

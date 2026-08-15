@@ -25,6 +25,8 @@
   --radius-lg: var(--radius-lg);
 
   --shadow-card: var(--shadow-card);
+  --font-serif: "Noto Serif", serif;
+  --font-sans: "Inter", sans-serif;
 }
 
 @theme {
