@@ -5,7 +5,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { STEPS } from "@/lib/steps";
 import { SidebarProvider } from "@/providers/SidebarContext";
 import { useFormStore } from "@/store/formStore";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
 export function FormLayout() {
   //  ROUTE GUARD:
@@ -39,6 +40,13 @@ export function FormLayout() {
 
         <div className="flex">
           <Sidebar>
+            <Link
+              to="/"
+              onClick={close}
+              className="flex items-center gap-2 mb-8 text-ink-muted hover:text-ink"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </Link>
             <div className="mt-2">
               <Stepper />
             </div>
