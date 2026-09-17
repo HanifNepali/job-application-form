@@ -73,7 +73,7 @@ export function Stepper() {
                     rounded-full bg-sidebar border border-accent-secondary text-sm font-medium
                     ${
                       isActiveStep
-                        ? "bg-accent-secondary/80"
+                        ? "bg-accent-secondary/80!"
                         : isReachableStep
                           ? "text-accent-secondary/90"
                           : "border-white/50"
