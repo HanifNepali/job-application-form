@@ -119,13 +119,11 @@ export function LandingPage() {
           </motion.h2>
           <motion.ul variants={item} className="space-y-6 pl-4 list-disc">
             {landingContent.decisions.items.map((decision) => (
-              <li key={decision.title}>
+              <li key={decision.title} className="text-ink-secondary">
                 <span className="font-medium text-ink block mb-2">
                   {decision.title}
                 </span>
-                <span className="block text-ink-secondary">
-                  {decision.description}
-                </span>
+                <span className="block">{decision.description}</span>
               </li>
             ))}
           </motion.ul>

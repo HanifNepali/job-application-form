@@ -29,6 +29,7 @@ export const FieldTextInput = forwardRef<HTMLInputElement, FieldTextInputProps>(
           className={`w-full rounded-md border bg-surface px-3 py-2 text-sm text-ink
             placeholder:text-ink-muted
             focus-visible:outline focus-visible:outline-offset-2
+            dark:[&[type=date]::-webkit-calendar-picker-indicator]:invert
             ${error ? "border-error" : "border-line focus-visible:outline-accent"}
             ${className}`}
           {...props}
